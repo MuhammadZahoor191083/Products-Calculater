@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Product Price Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      /* background-color: black; */
+    }
+
+    #calculator {
+      background-color: darkolivegreen;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      border: 1px solid black;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: green;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #invoice {
+      display: none;
+      margin-top: 30px;
+      background-color: darkolivegreen;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid 3;
+    }
+
+    th {
+      background-color: black;
+      color: #fff;
+    } 
+    body{
+        background-color: black;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <img src="" alt="">
+
+<div id="calculator">
+  <h1>Products Price Calculator</h1>
+
+  <div id="products">
+    <div class="product">
+      <label for="productName1">Product Name:</label>
+      <input type="text" id="productName1" placeholder="Enter product name">
+
+      <label for="productPrice1">Product Price:</label>
+      <input type="number" id="productPrice1" placeholder="Enter product price">
+
+      <label for="quantity1">Quantity:</label>
+      <input type="number" id="quantity1" placeholder="Enter quantity">
+    </div>
+  </div>
+
+  <button onclick="addProduct()">Add Another Product</button>
+  <button onclick="calculatePrice()">Generate Invoice</button>
+
+  <div id="invoice">
+    <h2>Invoice</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="invoiceBody"></tbody>
+    </table>
+    <p id="totalPrice">Total Price: $0</p>
+  </div>
+</div>
+
+<script>
+  let productCount = 1;
+
+  function addProduct() {
+    productCount++;
+
+    const productDiv = document.createElement('div');
+    productDiv.className = 'product';
+    productDiv.innerHTML = `
+      <label for="productName${productCount}">Product Name:</label>
+      <input type="text" id="productName${productCount}" placeholder="Enter product name">
+
+      <label for="productPrice${productCount}">Product Price:</label>
+      <input type="number" id="productPrice${productCount}" placeholder="Enter product price">
+
+      <label for="quantity${productCount}">Quantity:</label>
+      <input type="number" id="quantity${productCount}" placeholder="Enter quantity">
+    `;
+
+    document.getElementById('products').appendChild(productDiv);
+  }
+
+  function calculatePrice() {
+    const invoiceBody = document.getElementById('invoiceBody');
+    invoiceBody.innerHTML = '';
+
+    let totalPrice = 0;
+
+    for (let i = 1; i <= productCount; i++) {
+      const productName = document.getElementById(`productName${i}`).value.trim();
+      const productPrice = parseFloat(document.getElementById(`productPrice${i}`).value);
+      const quantity = parseInt(document.getElementById(`quantity${i}`).value);
+
+      if (productName === '' || isNaN(productPrice) || isNaN(quantity) || productPrice < 0 || quantity < 0) {
+        alert("Please enter valid values for all products.");
+        return;
+      }
+
+      const totalProductPrice = productPrice * quantity;
+      totalPrice += totalProductPrice;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${productName}</td>
+        <td>$${productPrice.toFixed(2)}</td>
+        <td>${quantity}</td>
+        <td>$${totalProductPrice.toFixed(2)}</td>
+      `;
+
+      invoiceBody.appendChild(row);
+    }
+
+    document.getElementById('totalPrice').innerText = `Total Price: $${totalPrice.toFixed(2)}`;
+
+    // Show the invoice
+    document.getElementById('invoice').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
